@@ -1,0 +1,72 @@
+Öncelikle xampp uygulamasını kurun. Apache ve Mysql'i aktif edin daha sonra githuptaki proje dosyasını xampp'ın kurulu olduğu dosya klosöründe 'htdocs'
+klosörü olucak proje dosyasını htdocs içerisine atınız. Daha sonra internet tarayıcınızı açın projenin veritabanını kurmamız gerekiyor. 
+tarayıcıda "http://localhost/phpmyadmin/" adresine gidin. Yeni veri tabanı oluşturup veritabanın ismini "wsdeneme" yapın.
+veri tabanının sql kısmına bu sql kodunu yapıştırın.
+
+-- USERS Tablosu
+CREATE TABLE users (
+    UserID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(50),
+    Surname VARCHAR(50),
+    Password VARCHAR(100),
+    Token VARCHAR(100),
+    Email VARCHAR(100),
+    Created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2FA Tablosu (İki Faktörlü Doğrulama)
+CREATE TABLE 2FA (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    UserID INT,
+    Code VARCHAR(50),
+    Expiration TIMESTAMP,
+    Created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserID) REFERENCES users(UserID)
+);
+
+-- FRIENDSHIPS Tablosu (Arkadaşlık İlişkileri)
+CREATE TABLE friendships (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    friend_id INT,
+    status ENUM('pending', 'accepted', 'rejected') DEFAULT 'pending',
+    FOREIGN KEY (user_id) REFERENCES users(UserID),
+    FOREIGN KEY (friend_id) REFERENCES users(UserID)
+);
+
+-- MESSAGES Tablosu (Mesajlar)
+CREATE TABLE messages (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    sender_id INT,
+    receiver_id INT,
+    message TEXT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users(UserID),
+    FOREIGN KEY (receiver_id) REFERENCES users(UserID)
+);
+
+-- CALLS Tablosu (Sesli Aramalar)
+CREATE TABLE calls (
+    CallID INT PRIMARY KEY AUTO_INCREMENT,
+    Caller_id INT,
+    Receiver_id INT,
+    Cagri_baslangici TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Cagri_Sonlandirilmasi TIMESTAMP NULL DEFAULT NULL,
+    Cagri_Durumu VARCHAR(50),
+    FOREIGN KEY (Caller_id) REFERENCES users(UserID),
+    FOREIGN KEY (Receiver_id) REFERENCES users(UserID)
+);
+
+
+
+
+
+bu kodu yapıştırdıktan sonra veritabanın tablonları oluşacaktır.  http://localhost/BAP/login.php   adresine gidin proje çalışacaktır.
+
+Daha sonra proje kodlarını güncellemek için visual studio code'u yükleyini. VSC'de sol üstte Dosya>klosör aç> Projenizin kurulu olduğu klosörü seçip Projenin 
+kodlarını güncelleyebilirsiniz.
+
+
+
+
+
